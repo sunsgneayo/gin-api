@@ -55,10 +55,10 @@ func Captcha(c *gin.Context) {
 	var driver base64Captcha.Driver
 	//创建一个字符串类型的验证码驱动DriverString, DriverMath :算式驱动
 	driverString := base64Captcha.DriverMath{
-		Height:          40,  //高度
-		Width:           100, //宽度
-		NoiseCount:      0,   //干扰数
-		ShowLineOptions: 3,   //展示个数
+		Height:          40,    //高度
+		Width:           100,   //宽度
+		NoiseCount:      0,     //干扰数
+		ShowLineOptions: 3 | 4, //展示个数
 	}
 	driver = driverString.ConvertFonts()
 	//生成验证码
