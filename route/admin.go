@@ -14,6 +14,7 @@ func InitRouter(r *gin.Engine) *gin.Engine {
 	})
 
 	r.POST("register", controller.Register)
+	r.POST("login", controller.Login)
 
 	r.GET("captcha", controller.Captcha)
 
