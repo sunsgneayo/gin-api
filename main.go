@@ -11,6 +11,7 @@ func main() {
 	r.Use(gin.Logger())
 	//r.Use(middleware.Casbin())
 
+	// 连接redis
 	config.SetupRedisDb()
 	route.InitRouter(r)
 

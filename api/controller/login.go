@@ -55,15 +55,7 @@ type DpjAdmin struct {
 }
 
 func Register(c *gin.Context) {
-
-	println(c.PostForm("captchaId"))
-	println(c.PostForm("captcha"))
-
-	an := store.Get(c.PostForm("captchaId"), false)
-
-	println(an)
-
-	if store.Verify(c.PostForm("captchaId"), c.PostForm("captcha"), true) == false {
+	if store.Verify(c.PostForm("captchaId"), c.PostForm("captcha"), false) == false {
 		response.WithContext(c).Error(400, "验证码错误")
 		return
 	}
