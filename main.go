@@ -11,6 +11,7 @@ func main() {
 	r.Use(gin.Logger())
 	//r.Use(middleware.Casbin())
 
+	config.SetupRedisDb()
 	route.InitRouter(r)
 
 	port := config.Get("app.default_listen_port")

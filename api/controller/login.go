@@ -3,6 +3,7 @@ package controller
 import (
 	"dpj-admin-api/config"
 	response "dpj-admin-api/support"
+	"dpj-admin-api/utils/captcha"
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 	"golang.org/x/crypto/bcrypt"
@@ -62,7 +63,7 @@ func Register(c *gin.Context) {
 
 	println(an)
 
-	if store.Verify(c.PostForm("captchaId"), c.PostForm("captcha"), false) == false {
+	if store.Verify(c.PostForm("captchaId"), c.PostForm("captcha"), true) == false {
 		response.WithContext(c).Error(400, "验证码错误")
 		return
 	}
@@ -104,24 +105,41 @@ func Register(c *gin.Context) {
 	response.WithContext(c).Success("注册成功！")
 }
 
-var store = base64Captcha.DefaultMemStore
+//var store = base64Captcha.DefaultMemStore
+//var store = common.RedisStore{}
+
+var store = captcha.DefaultRedisStore()
 
 // Captcha 获取验证码
 func Captcha(c *gin.Context) {
 	//定义一个driver
 	var driver base64Captcha.Driver
 	//创建一个字符串类型的验证码驱动DriverString, DriverMath :算式驱动
-	driverString := base64Captcha.DriverMath{
-		Height:          50,    //高度
-		Width:           120,   //宽度
-		NoiseCount:      0,     //干扰数
-		ShowLineOptions: 3 | 4, //展示个数
+	//driverString := base64Captcha.DriverMath{
+	//	Height:          50,    //高度
+	//	Width:           120,   //宽度
+	//	NoiseCount:      0,     //干扰数
+	//	ShowLineOptions: 3 | 4, //展示个数
+	//}
+	driverString := base64Captcha.DriverString{
+		Height:          200,
+		Width:           200,
+		NoiseCount:      0,
+		ShowLineOptions: 4,
+		Length:          4,
+		Source:          "0123456789",
+		//BgColor: &color.RGBA{
+		//	R: 3,
+		//	G: 102,
+		//	B: 214,
+		//	A: 125,
+		//},
 	}
+
 	driver = driverString.ConvertFonts()
 	//生成验证码
-	cap := base64Captcha.NewCaptcha(driver, store)
+	cap := base64Captcha.NewCaptcha(driver, store.UseWithCtx(c))
 	id, b64s, err := cap.Generate()
-	store.Set(id, b64s)
 	if err != nil {
 		response.WithContext(c).Error(500, "Server Error")
 		return
