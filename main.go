@@ -18,5 +18,6 @@ func main() {
 	port := config.Get("app.default_listen_port")
 	host := config.Get("app.default_local_host")
 
-	r.Run(host + ":" + port) // 监听并在 0.0.0.0:8008 上启动服务
+	// 服务初始化
+	r.Run(host + ":" + port)
 }
