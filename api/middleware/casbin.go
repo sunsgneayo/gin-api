@@ -1,20 +1,19 @@
 package middleware
 
 import (
+	"dpj-admin-api/config"
+	response "dpj-admin-api/support"
 	"fmt"
 	"github.com/casbin/casbin/v2"
-	gormadapter "github.com/casbin/gorm-adapter/v3"
+	gormandiser "github.com/casbin/gorm-adapter/v3"
 	"github.com/gin-gonic/gin"
 )
 
-func Casbin() gin.HandlerFunc {
+// Permissions casbin权限认证系统
+func Permissions() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		a, _ := gormadapter.NewAdapter("mysql", "data_center:KCMBfAjeJhbJXsSe@tcp(43.138.132.9:3398)/") // Your driver and data source.
-		e, _ := casbin.NewEnforcer("./config/rbac_model.conf", a)
-
-		//e.LoadPolicy()
-		//
-
+		a, _ := gormandiser.NewAdapterByDB(config.Db()) // Your driver and data source.
+		e, _ := casbin.NewEnforcer("./config/casbin/rbac_model.conf", a)
 		//ip := c.ClientIP()
 		uri := c.Request.URL.Path
 
@@ -24,24 +23,22 @@ func Casbin() gin.HandlerFunc {
 
 		//e.AddPolicy(userId, uri, method)
 
+		fmt.Println("认证中间件")
 		// Check the permission.
-		ok, err := e.Enforce(userId, uri, method)
+		result, err := e.Enforce(userId, uri, method)
 		if err != nil {
 			fmt.Printf("%s", err)
-		}
-
-		if ok == true {
-			fmt.Printf("ok")
-			// 允许alice读取data1
-		} else {
-			fmt.Printf("认证失败")
-
-			c.JSON(403, gin.H{
-				"message": "认证失败，无权限访问",
-			})
+			response.WithContext(c).Error(403, "认证失败")
 			c.Abort()
 			return
 		}
+
+		if result == false {
+			response.WithContext(c).Error(403, "认证失败，无权限访问")
+			c.Abort()
+			return
+		}
+		c.Next()
 
 	}
 }

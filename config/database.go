@@ -7,11 +7,11 @@ import (
 )
 
 func Db() *gorm.DB {
-	host := "43.138.132.9"
-	port := "3398"
-	username := "data_center"
-	password := "KCMBfAjeJhbJXsSe"
-	database := "data_center"
+	host := Get("mysql.host")
+	port := Get("mysql.port")
+	username := Get("mysql.username")
+	password := Get("mysql.password")
+	database := Get("mysql.database")
 	charset := "utf8"
 	args := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=true",
 		username,

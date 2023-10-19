@@ -8,9 +8,11 @@ import (
 
 func NoticeRouter(r *gin.Engine) *gin.Engine {
 
-	r.POST("notice", middleware.JwtAuth(), controller.GetNoticeList)
+	router := r.Group("api").Use(middleware.Permissions())
 
-	r.POST("noticeInfo", middleware.JwtAuth(), middleware.Casbin(), controller.GetNotice)
+	router.POST("notice", controller.GetNoticeList)
+
+	router.POST("noticeInfo", controller.GetNotice)
 
 	return r
 }

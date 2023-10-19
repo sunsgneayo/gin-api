@@ -12,6 +12,7 @@ mysql:
   port: 3398
   username: data_center
   password: KCMBfAjeJhbJXsSe
+  database: data_center
 
 redis:
   host: 43.138.132.9

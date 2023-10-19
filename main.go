@@ -9,12 +9,11 @@ import (
 func main() {
 	r := gin.New()
 	r.Use(gin.Logger())
-	//r.Use(middleware.Casbin())
 
 	// 连接redis
 	config.SetupRedisDb()
-	route.InitRouter(r)
-	route.NoticeRouter(r)
+
+	route.InitRoute(r)
 
 	port := config.Get("app.default_listen_port")
 	host := config.Get("app.default_local_host")

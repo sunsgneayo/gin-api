@@ -16,10 +16,9 @@ func SetupRedisDb() error {
 	//fmt.Println(ctx)
 	var ctx = context.Background()
 	RedisDb = redis.NewClient(&redis.Options{
-		//Addr:     Get("redis.host") + ":" + Get("redis.port"),
-		Addr:     "43.138.132.9:6379",
-		Password: "fanjiao2022", // no password set
-		DB:       0,             // use default DB
+		Addr:     Get("redis.host") + ":" + Get("redis.port"),
+		Password: Get("redis.password"),
+		DB:       0, // use default DB
 	})
 
 	_, err := RedisDb.Ping(ctx).Result()
