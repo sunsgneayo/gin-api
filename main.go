@@ -20,4 +20,7 @@ func main() {
 
 	// 服务初始化
 	r.Run(host + ":" + port)
+
+	// 定时任务初始化（需要单独运行）
+	config.InitTaskRun()
 }

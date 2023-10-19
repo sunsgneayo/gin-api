@@ -1,6 +1,7 @@
 # gin-api
 
 ### 架构
+- corn 异步定时任务
 - base64Captcha 灵活验证码
 - viper 配置服务
 - casbin 权限服务
