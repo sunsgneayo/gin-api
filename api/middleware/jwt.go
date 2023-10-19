@@ -1,48 +1,50 @@
 package middleware
 
 import (
+	response "dpj-admin-api/support"
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"strconv"
 	"time"
 )
 
 func JwtAuth() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		authHeader := c.Request.Header.Get("Authorization")
-		fmt.Println(authHeader)
 		if authHeader == "" {
-
 			c.Abort()
+			response.WithContext(c).Error(403, "Authorization 未携带token")
 			return
 		}
-
-		_, err := ParseToken(authHeader)
+		parseToken, err := ParseToken(authHeader)
 		if err != nil {
 			c.Abort()
+			response.WithContext(c).Error(403, "token 验证失败")
 			return
 		}
-		c.Next()
 
+		c.Set("UserId", strconv.Itoa(parseToken.Id))
+		c.Next()
 	}
 }
 
-type Myclaims struct {
+type JwtStruct struct {
 	Username string `json:"username"`
+	Id       int    `json:"id"`
 	jwt.StandardClaims
 }
 
 var Secret = []byte("secret")
 
-func ParseToken(tokenString string) (*Myclaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &Myclaims{}, func(token *jwt.Token) (interface{}, error) {
+func ParseToken(tokenString string) (*JwtStruct, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &JwtStruct{}, func(token *jwt.Token) (interface{}, error) {
 		return Secret, nil
 	})
 	if err != nil {
 		return nil, err
 	}
-	if claims, ok := token.Claims.(*Myclaims); ok && token.Valid {
+	if claims, ok := token.Claims.(*JwtStruct); ok && token.Valid {
 		return claims, nil
 	}
 	return nil, errors.New("invalid token")
@@ -50,12 +52,13 @@ func ParseToken(tokenString string) (*Myclaims, error) {
 
 const TokenExpireDuration = time.Hour * 24
 
-func GenToken(username string) (string, error) {
-	c := Myclaims{
+func GenToken(username string, userId int) (string, error) {
+	c := JwtStruct{
 		Username: username,
+		Id:       userId,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(),
-			Issuer:    "gin-demo",
+			Issuer:    "v-v-v-v",
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, c)

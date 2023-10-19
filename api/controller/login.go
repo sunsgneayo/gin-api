@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"dpj-admin-api/api/middleware"
 	"dpj-admin-api/config"
 	response "dpj-admin-api/support"
 	"dpj-admin-api/utils/captcha"
@@ -15,7 +16,6 @@ func Login(c *gin.Context) {
 		response.WithContext(c).Error(400, "验证码错误")
 		return
 	}
-
 	//获取参数
 	username := c.PostForm("username")
 	password := c.PostForm("password")
@@ -44,7 +44,10 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	response.WithContext(c).Success("登录成功")
+	tokenString, _ := middleware.GenToken(user.Username, user.ID)
+	response.WithContext(c).Success(gin.H{
+		"token": tokenString,
+	})
 
 }
 
@@ -55,7 +58,7 @@ type DpjAdmin struct {
 }
 
 func Register(c *gin.Context) {
-	if store.Verify(c.PostForm("captchaId"), c.PostForm("captcha"), false) == false {
+	if store.Verify(c.PostForm("captchaId"), c.PostForm("captcha"), true) == false {
 		response.WithContext(c).Error(400, "验证码错误")
 		return
 	}
@@ -130,8 +133,8 @@ func Captcha(c *gin.Context) {
 
 	driver = driverString.ConvertFonts()
 	//生成验证码
-	cap := base64Captcha.NewCaptcha(driver, store.UseWithCtx(c))
-	id, b64s, err := cap.Generate()
+	newCaptcha := base64Captcha.NewCaptcha(driver, store.UseWithCtx(c))
+	id, b64s, err := newCaptcha.Generate()
 	if err != nil {
 		response.WithContext(c).Error(500, "Server Error")
 		return

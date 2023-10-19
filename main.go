@@ -14,6 +14,7 @@ func main() {
 	// 连接redis
 	config.SetupRedisDb()
 	route.InitRouter(r)
+	route.NoticeRouter(r)
 
 	port := config.Get("app.default_listen_port")
 	host := config.Get("app.default_local_host")

@@ -12,11 +12,20 @@ func Casbin() gin.HandlerFunc {
 		a, _ := gormadapter.NewAdapter("mysql", "data_center:KCMBfAjeJhbJXsSe@tcp(43.138.132.9:3398)/") // Your driver and data source.
 		e, _ := casbin.NewEnforcer("./config/rbac_model.conf", a)
 
-		e.LoadPolicy()
+		//e.LoadPolicy()
+		//
 
-		e.AddPolicy("alice", "data1", "read")
+		//ip := c.ClientIP()
+		uri := c.Request.URL.Path
+
+		method := c.Request.Method
+
+		userId, _ := c.Get("UserId")
+
+		//e.AddPolicy(userId, uri, method)
+
 		// Check the permission.
-		ok, err := e.Enforce("alice", "data1", "wi")
+		ok, err := e.Enforce(userId, uri, method)
 		if err != nil {
 			fmt.Printf("%s", err)
 		}
