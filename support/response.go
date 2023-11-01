@@ -28,7 +28,7 @@ func WithContext(ctx *gin.Context) *Wrapper {
 	return &Wrapper{ctx: ctx}
 }
 
-// Success 输出成功信息
+// Success 输出成功信息;data = json字符串
 func (wrapper *Wrapper) Success(data interface{}) {
 	resp := NewResponse()
 	resp.Data = data

@@ -37,5 +37,7 @@ func UploadFile(c *gin.Context) {
 		return
 	}
 
-	response.WithContext(c).Success("上传成功！")
+	response.WithContext(c).Success(gin.H{
+		"msg": "上传成功",
+	})
 }
