@@ -11,5 +11,7 @@ func CommonRouter(r *gin.Engine) *gin.Engine {
 	r.POST("login", controller.Login)
 	r.GET("captcha", controller.Captcha)
 
+	r.POST("upload", controller.UploadFile)
+
 	return r
 }
