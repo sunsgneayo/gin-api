@@ -10,15 +10,28 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Login(c *gin.Context) {
+type requestLogin struct {
+	Username  string `json:"username"`
+	CaptchaId string `json:"captchaId"`
+	Captcha   string `json:"captcha"`
+	Password  string `json:"password"`
+}
 
-	if store.Verify(c.PostForm("captchaId"), c.PostForm("captcha"), true) == false {
+func Login(c *gin.Context) {
+	var request requestLogin
+	err := c.Bind(&request)
+	if err != nil {
+		response.WithContext(c).Error(400, "参数获取失败")
+		return
+	}
+
+	if store.Verify(request.CaptchaId, request.Captcha, true) == false {
 		response.WithContext(c).Error(400, "验证码错误")
 		return
 	}
 	//获取参数
-	username := c.PostForm("username")
-	password := c.PostForm("password")
+	username := request.Username
+	password := request.Password
 
 	//数据验证
 	if len(username) < 4 {
@@ -117,8 +130,8 @@ func Captcha(c *gin.Context) {
 	//	ShowLineOptions: 3 | 4, //展示个数
 	//}
 	driverString := base64Captcha.DriverString{
-		Height:          200,
-		Width:           200,
+		Height:          50,
+		Width:           140,
 		NoiseCount:      0,
 		ShowLineOptions: 4,
 		Length:          4,
