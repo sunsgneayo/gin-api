@@ -7,7 +7,7 @@ import (
 )
 
 func UsersRouter(r *gin.RouterGroup) {
-	router := r.Group("user").Use(middleware.Permissions())
+	router := r.Group("user").Use(middleware.JwtAuth())
 
 	// 注册
 	router.POST("info", controller.UserInfo)

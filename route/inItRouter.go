@@ -20,4 +20,6 @@ func InitRoute(r *gin.Engine) {
 	LoginRouter(api)
 
 	NoticeRouter(api)
+
+	UsersRouter(api)
 }
