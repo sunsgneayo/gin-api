@@ -2,21 +2,14 @@ package route
 
 import (
 	"dpj-admin-api/api/controller"
+	"dpj-admin-api/api/middleware"
 	"github.com/gin-gonic/gin"
 )
 
-func LoginRouter(r *gin.RouterGroup) {
+func AdminRouter(r *gin.RouterGroup) {
+	router := r.Group("user").Use(middleware.JwtAuth())
 
 	// 注册
-	r.POST("register", controller.Register)
-
-	// 登录
-	r.POST("login", controller.Login)
-
-	// 获取验证码
-	r.GET("captcha", controller.Captcha)
-
-	// 文件上传
-	r.POST("upload", controller.UploadFile)
+	router.POST("info", controller.UserInfo)
 
 }

@@ -17,6 +17,12 @@ type requestLogin struct {
 	Password  string `json:"password"`
 }
 
+func LoginOut(c *gin.Context) {
+	response.WithContext(c).Success(gin.H{
+		"message": "已退出登录！",
+	})
+}
+
 func Login(c *gin.Context) {
 	var request requestLogin
 	err := c.Bind(&request)

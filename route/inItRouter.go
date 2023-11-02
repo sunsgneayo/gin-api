@@ -17,9 +17,14 @@ func InitRoute(r *gin.Engine) {
 
 	// 开始分配路由
 
+	// 登录相关路由
 	LoginRouter(api)
 
 	NoticeRouter(api)
 
+	// 管理员相关路由
+	AdminRouter(api)
+
+	// 平台用户列表关系路由
 	UsersRouter(api)
 }
