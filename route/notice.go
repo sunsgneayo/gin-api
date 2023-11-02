@@ -6,13 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NoticeRouter(r *gin.Engine) *gin.Engine {
+func NoticeRouter(r *gin.RouterGroup) {
 
-	router := r.Group("api").Use(middleware.Permissions())
+	router := r.Group("notice").Use(middleware.Permissions())
 
 	router.POST("notice", controller.GetNoticeList)
 
 	router.POST("noticeInfo", controller.GetNotice)
 
-	return r
 }

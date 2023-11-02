@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CommonRouter(r *gin.Engine) *gin.Engine {
+func LoginRouter(r *gin.RouterGroup) {
 
 	// 注册
 	r.POST("register", controller.Register)
@@ -19,5 +19,4 @@ func CommonRouter(r *gin.Engine) *gin.Engine {
 	// 文件上传
 	r.POST("upload", controller.UploadFile)
 
-	return r
 }

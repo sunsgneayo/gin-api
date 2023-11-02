@@ -8,12 +8,11 @@ import (
 
 func main() {
 	r := gin.New()
-	r.Use(gin.Logger())
+	// 初始化路由
+	route.InitRoute(r)
 
 	// 连接redis
 	config.SetupRedisDb()
-
-	route.InitRoute(r)
 
 	port := config.Get("app.default_listen_port")
 	host := config.Get("app.default_local_host")
