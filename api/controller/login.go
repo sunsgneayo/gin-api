@@ -50,7 +50,7 @@ func Login(c *gin.Context) {
 	}
 
 	//判断手机号是否存在
-	var user DpjAdmin
+	var user DpjAdmins
 	config.Db().Where("username = ?", username).First(&user)
 	if user.ID == 0 {
 		response.WithContext(c).Error(400, "用户不存在")
@@ -70,7 +70,7 @@ func Login(c *gin.Context) {
 
 }
 
-type DpjAdmin struct {
+type DpjAdmins struct {
 	Username string
 	Password string
 	ID       int
@@ -97,7 +97,7 @@ func Register(c *gin.Context) {
 	}
 
 	//判断手机号是否存在
-	var user DpjAdmin
+	var user DpjAdmins
 	config.Db().Where("username = ?", username).First(&user)
 	if user.ID != 0 {
 		response.WithContext(c).Error(400, "用户已存在")
@@ -110,7 +110,7 @@ func Register(c *gin.Context) {
 		response.WithContext(c).Error(400, "密码加密错误")
 		return
 	}
-	newUser := DpjAdmin{
+	newUser := DpjAdmins{
 		Username: username,
 		Password: string(Password),
 	}
