@@ -7,9 +7,9 @@ import (
 )
 
 func AdminRouter(r *gin.RouterGroup) {
-	router := r.Group("user").Use(middleware.JwtAuth())
+	router := r.Group("admin").Use(middleware.JwtAuth())
 
-	// 注册
+	// 获取管理员信息
 	router.POST("info", controller.UserInfo)
 
 }
