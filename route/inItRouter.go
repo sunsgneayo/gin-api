@@ -27,4 +27,7 @@ func InitRoute(r *gin.Engine) {
 
 	// 平台用户列表关系路由
 	UsersRouter(api)
+
+	// 平台房间信息路由
+	RoomsRouter(api)
 }

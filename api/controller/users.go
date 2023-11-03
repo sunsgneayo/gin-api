@@ -6,12 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type requestUserList struct {
-	Username string `json:"username"`
-}
-
 type DpjUser struct {
-	ID            int
+	ID            int `gorm:"primaryKey"`
 	OpenId        string
 	Nickname      string
 	HeadPicture   string
@@ -24,21 +20,41 @@ type DpjUser struct {
 	MatchNumber   int
 	Region        string
 }
+type requestUserList struct {
+	Page         int    `json:"page"`
+	PageSize     int    `json:"size"`
+	Nickname     string `json:"nickname"`
+	Status       *int   `json:"status"`
+	OnlineStatus *int   `json:"online_status"`
+}
 
 func UserList(c *gin.Context) {
 
-	//var request requestUserList
-	//err := c.Bind(&request)
-	//if err != nil {
-	//	response.WithContext(c).Error(400, "参数获取失败")
-	//	return
-	//}
+	// 未处理page,size默认0
+	var request requestUserList
+	c.Bind(&request)
 
+	// 开始执行查询
+	query := config.Db().Model(&DpjUser{})
+
+	if request.Nickname != "" {
+		query.Where("nickname LIKE ?", "%"+request.Nickname+"%")
+	}
+
+	if request.Status != nil {
+		query.Where("status = ?", request.Status)
+	}
+
+	if request.OnlineStatus != nil {
+		query.Where("online_status = ?", request.OnlineStatus)
+	}
+
+	// 开始执行统计
 	var userCount int64
-	config.Db().Model(&DpjUser{}).Count(&userCount)
+	query.Count(&userCount)
 
 	var DpjUserList []DpjUser
-	config.Db().Model(&DpjUser{}).Limit(10).Find(&DpjUserList)
+	query.Limit(request.PageSize).Offset((request.Page - 1) * request.PageSize).Find(&DpjUserList)
 
 	response.WithContext(c).Success(gin.H{
 		"total": userCount,

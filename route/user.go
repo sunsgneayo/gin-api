@@ -2,14 +2,14 @@ package route
 
 import (
 	"dpj-admin-api/api/controller"
-	"dpj-admin-api/api/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func UsersRouter(r *gin.RouterGroup) {
-	router := r.Group("user").Use(middleware.JwtAuth())
+	router := r.Group("user")
+	//router := r.Group("user").Use(middleware.JwtAuth())
 
-	// 注册
-	router.GET("list", controller.UserList)
+	// 用户列表
+	router.POST("list", controller.UserList)
 
 }
