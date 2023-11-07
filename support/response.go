@@ -1,6 +1,7 @@
 package support
 
 import (
+	"dpj-admin-api/config"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -32,6 +33,8 @@ func WithContext(ctx *gin.Context) *Wrapper {
 func (wrapper *Wrapper) Success(data interface{}) {
 	resp := NewResponse()
 	resp.Data = data
+	wrapper.ctx.Header("Server", config.Get("app.name"))
+	wrapper.ctx.Header("Server-Version", config.Get("app.version"))
 	wrapper.ctx.JSON(http.StatusOK, resp)
 }
 
@@ -40,5 +43,7 @@ func (wrapper *Wrapper) Error(statusCode int, errMessage string) {
 	resp := NewResponse()
 	resp.Status = statusCode
 	resp.Message = errMessage
+	wrapper.ctx.Header("Server", config.Get("app.name"))
+	wrapper.ctx.Header("Server-Version", config.Get("app.version"))
 	wrapper.ctx.JSON(statusCode, resp)
 }

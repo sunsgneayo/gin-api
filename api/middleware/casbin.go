@@ -3,7 +3,6 @@ package middleware
 import (
 	"dpj-admin-api/config"
 	response "dpj-admin-api/support"
-	"fmt"
 	"github.com/casbin/casbin/v2"
 	gormandiser "github.com/casbin/gorm-adapter/v3"
 	"github.com/gin-gonic/gin"
@@ -23,11 +22,9 @@ func Permissions() gin.HandlerFunc {
 
 		//e.AddPolicy(userId, uri, method)
 
-		fmt.Println("认证中间件")
 		// Check the permission.
 		result, err := e.Enforce(userId, uri, method)
 		if err != nil {
-			fmt.Printf("%s", err)
 			response.WithContext(c).Error(403, "认证失败")
 			c.Abort()
 			return
