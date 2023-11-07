@@ -4,6 +4,7 @@ import (
 	response "dpj-admin-api/support"
 	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
 	"runtime/debug"
 )
 
@@ -15,7 +16,7 @@ func ErrorHandle(c *gin.Context) {
 			log.Printf("panic: %v\n", r)
 			debug.PrintStack()
 			//封装通用json返回
-			response.WithContext(c).Error(500, "服务异常")
+			response.WithContext(c).Error(http.StatusInternalServerError, "服务异常")
 		}
 	}()
 	c.Next()

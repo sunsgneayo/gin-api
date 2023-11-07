@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mojocn/base64Captcha"
 	"golang.org/x/crypto/bcrypt"
+	"net/http"
 )
 
 type requestLogin struct {
@@ -27,12 +28,12 @@ func Login(c *gin.Context) {
 	var request requestLogin
 	err := c.Bind(&request)
 	if err != nil {
-		response.WithContext(c).Error(400, "参数获取失败")
+		response.WithContext(c).Error(http.StatusBadRequest, "参数获取失败")
 		return
 	}
 
 	if store.Verify(request.CaptchaId, request.Captcha, true) == false {
-		response.WithContext(c).Error(400, "验证码错误")
+		response.WithContext(c).Error(http.StatusBadRequest, "验证码错误")
 		return
 	}
 	//获取参数
@@ -41,11 +42,11 @@ func Login(c *gin.Context) {
 
 	//数据验证
 	if len(username) < 4 {
-		response.WithContext(c).Error(400, "用户名不能小于4位")
+		response.WithContext(c).Error(http.StatusBadRequest, "用户名不能小于4位")
 		return
 	}
 	if len(password) < 6 {
-		response.WithContext(c).Error(400, "密码不能小于6位")
+		response.WithContext(c).Error(http.StatusBadRequest, "密码不能小于6位")
 		return
 	}
 
@@ -53,13 +54,13 @@ func Login(c *gin.Context) {
 	var user DpjAdmins
 	config.Db().Where("username = ?", username).First(&user)
 	if user.ID == 0 {
-		response.WithContext(c).Error(400, "用户不存在")
+		response.WithContext(c).Error(http.StatusBadRequest, "用户不存在")
 		return
 	}
 
 	//判断密码是否正确
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		response.WithContext(c).Error(400, "密码错误")
+		response.WithContext(c).Error(http.StatusBadRequest, "密码错误")
 		return
 	}
 
@@ -78,7 +79,7 @@ type DpjAdmins struct {
 
 func Register(c *gin.Context) {
 	if store.Verify(c.PostForm("captchaId"), c.PostForm("captcha"), true) == false {
-		response.WithContext(c).Error(400, "验证码错误")
+		response.WithContext(c).Error(http.StatusBadRequest, "验证码错误")
 		return
 	}
 
@@ -88,11 +89,11 @@ func Register(c *gin.Context) {
 
 	//数据验证
 	if len(username) == 0 {
-		response.WithContext(c).Error(400, "用户名不能为空")
+		response.WithContext(c).Error(http.StatusBadRequest, "用户名不能为空")
 		return
 	}
 	if len(password) < 6 {
-		response.WithContext(c).Error(400, "密码不能少于6位")
+		response.WithContext(c).Error(http.StatusBadRequest, "密码不能少于6位")
 		return
 	}
 
@@ -100,14 +101,14 @@ func Register(c *gin.Context) {
 	var user DpjAdmins
 	config.Db().Where("username = ?", username).First(&user)
 	if user.ID != 0 {
-		response.WithContext(c).Error(400, "用户已存在")
+		response.WithContext(c).Error(http.StatusBadRequest, "用户已存在")
 		return
 	}
 
 	//创建用户
 	Password, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		response.WithContext(c).Error(400, "密码加密错误")
+		response.WithContext(c).Error(http.StatusBadRequest, "密码加密错误")
 		return
 	}
 	newUser := DpjAdmins{
@@ -155,7 +156,7 @@ func Captcha(c *gin.Context) {
 	newCaptcha := base64Captcha.NewCaptcha(driver, store.UseWithCtx(c))
 	id, b64s, err := newCaptcha.Generate()
 	if err != nil {
-		response.WithContext(c).Error(500, "Server Error")
+		response.WithContext(c).Error(http.StatusBadRequest, "Server Error")
 		return
 	}
 	response.WithContext(c).Success(gin.H{

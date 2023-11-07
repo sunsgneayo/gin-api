@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"net/http"
 	"strconv"
 	"time"
 )
@@ -14,13 +15,13 @@ func JwtAuth() func(c *gin.Context) {
 		authHeader := c.Request.Header.Get("Authorization")
 		if authHeader == "" {
 			c.Abort()
-			response.WithContext(c).Error(403, "Authorization 未携带token")
+			response.WithContext(c).Error(http.StatusForbidden, "Authorization 未携带token")
 			return
 		}
 		parseToken, err := ParseToken(authHeader)
 		if err != nil {
 			c.Abort()
-			response.WithContext(c).Error(403, "token 验证失败")
+			response.WithContext(c).Error(http.StatusForbidden, "token 验证失败")
 			return
 		}
 

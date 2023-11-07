@@ -6,6 +6,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	gormandiser "github.com/casbin/gorm-adapter/v3"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 // Permissions casbin权限认证系统
@@ -25,13 +26,13 @@ func Permissions() gin.HandlerFunc {
 		// Check the permission.
 		result, err := e.Enforce(userId, uri, method)
 		if err != nil {
-			response.WithContext(c).Error(403, "认证失败")
+			response.WithContext(c).Error(http.StatusForbidden, "认证失败")
 			c.Abort()
 			return
 		}
 
 		if result == false {
-			response.WithContext(c).Error(403, "认证失败，无权限访问")
+			response.WithContext(c).Error(http.StatusForbidden, "认证失败，无权限访问")
 			c.Abort()
 			return
 		}

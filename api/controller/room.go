@@ -4,6 +4,7 @@ import (
 	"dpj-admin-api/config"
 	response "dpj-admin-api/support"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type requestRoomList struct {
@@ -28,7 +29,7 @@ func RoomList(c *gin.Context) {
 	var request requestRoomList
 	err := c.Bind(&request)
 	if err != nil {
-		response.WithContext(c).Error(400, "参数获取失败")
+		response.WithContext(c).Error(http.StatusBadRequest, "参数获取失败")
 		return
 	}
 
