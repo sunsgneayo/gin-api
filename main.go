@@ -18,7 +18,10 @@ func main() {
 	route.InitRoute(r)
 
 	// 连接redis
-	config.SetupRedisDb()
+	err := config.SetupRedisDb()
+	if err != nil {
+		return
+	}
 
 	port := config.Get("app.default_listen_port")
 	//host := config.Get("app.default_local_host")
