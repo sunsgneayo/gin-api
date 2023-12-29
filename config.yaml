@@ -17,7 +17,7 @@ mysql:
   database: data_center
 
 redis:
-  host: 43.138.132.9
+  host: 127.0.0.1
   port: 6379
   username: ''
-  password: fanjiao2022
+  password: ''
