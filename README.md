@@ -1,5 +1,7 @@
 # gin-api
 
+> 目前只适用于http项目支持
+
 ### 架构
 - corn 异步定时任务
 - base64Captcha 灵活验证码
