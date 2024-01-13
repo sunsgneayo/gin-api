@@ -27,3 +27,8 @@ r.User(cors)
 | casbin| 权限校验中间件|
 | jwt| token校验中间件|
 | error | 异常处理中间件|
+
+#### 二进制打包
+```shell
+go build -o main-linux main.go
+```
