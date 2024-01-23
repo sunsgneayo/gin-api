@@ -39,7 +39,7 @@ go build -o main-linux main.go
 ```
 6. 部署与守护进程运行，将二进制文件与config.yaml放到服务器后，使用**Supervisor**守护进程运行，
 ```text
-
+  
 ```
 
 
