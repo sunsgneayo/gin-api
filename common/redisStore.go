@@ -15,7 +15,7 @@ const CAPTCHA = "captcha:"
 type RedisStore struct {
 }
 
-// Set set a capt
+// Set /** set a capt
 func (r RedisStore) Set(id string, value string) error {
 	key := CAPTCHA + id
 	err := config.RedisDb.Set(ctx, key, value, time.Minute*2).Err()
@@ -25,7 +25,7 @@ func (r RedisStore) Set(id string, value string) error {
 	return nil
 }
 
-// Get get a capt
+// Get /** get a capt
 func (r RedisStore) Get(id string, clear bool) string {
 	key := CAPTCHA + id
 	val, err := config.RedisDb.Get(ctx, key).Result()

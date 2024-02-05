@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"dpj-admin-api/api/middleware"
+	"dpj-admin-api/api/service"
 	"dpj-admin-api/config"
 	response "dpj-admin-api/support"
 	"dpj-admin-api/utils/captcha"
@@ -24,7 +24,8 @@ func LoginOut(c *gin.Context) {
 	})
 }
 
-func Login(c *gin.Context) {
+// LoginWithCaptcha /** 行为验证码登录（非图片验证码码）
+func LoginWithCaptcha(c *gin.Context) {
 	var request requestLogin
 	err := c.Bind(&request)
 	if err != nil {
@@ -32,10 +33,16 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	if store.Verify(request.CaptchaId, request.Captcha, true) == false {
+	//if store.Verify(request.CaptchaId, request.Captcha, true) == false {
+	//	response.WithContext(c).Error(http.StatusBadRequest, "验证码错误")
+	//	return
+	//}
+
+	if service.CheckCapByKeyValue(request.CaptchaId, request.Captcha) == false {
 		response.WithContext(c).Error(http.StatusBadRequest, "验证码错误")
 		return
 	}
+
 	//获取参数
 	username := request.Username
 	password := request.Password
@@ -49,24 +56,12 @@ func Login(c *gin.Context) {
 		response.WithContext(c).Error(http.StatusBadRequest, "密码不能小于6位")
 		return
 	}
-
-	//判断手机号是否存在
-	var user DpjAdmins
-	config.Db().Where("username = ?", username).First(&user)
-	if user.ID == 0 {
-		response.WithContext(c).Error(http.StatusBadRequest, "用户不存在")
-		return
+	token, err := service.Login(username, password)
+	if err != nil {
+		response.WithContext(c).Error(http.StatusBadRequest, err.Error())
 	}
-
-	//判断密码是否正确
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		response.WithContext(c).Error(http.StatusBadRequest, "密码错误")
-		return
-	}
-
-	tokenString, _ := middleware.GenToken(user.Username, user.ID)
 	response.WithContext(c).Success(gin.H{
-		"token": tokenString,
+		"token": token,
 	})
 
 }

@@ -6,16 +6,14 @@ app:
   default_local_host: 0.0.0.0
 
 
-
-
-
+# MYSQL
 mysql:
   host: 43.138.132.9
   port: 3398
   username: data_center
   password: KCMBfAjeJhbJXsSe
   database: data_center
-
+# REDIS
 redis:
   host: 127.0.0.1
   port: 6379
