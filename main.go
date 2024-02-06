@@ -25,11 +25,6 @@ func main() {
 	}
 
 	port := config.Get("app.default_listen_port")
-	//host := config.Get("app.default_local_host")
-
-	// 服务初始化
-	//r.Run(host + ":" + port)
-
 	srv := &http.Server{
 		Addr:    ":" + port,
 		Handler: r,

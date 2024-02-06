@@ -4,11 +4,13 @@
 
 ### 架构
 - corn 异步定时任务
-- base64Captcha 灵活验证码
-- viper 配置服务
-- casbin 权限服务
+- base64Captcha 验证码
+- go_captcha 行为验证码
+- viper 配置发现服务
+- casbin 权限认证服务
 - redis 缓存服务
 - rabbit 队列服务
+- http  客户端服务
 
 ### 快速开始
 
