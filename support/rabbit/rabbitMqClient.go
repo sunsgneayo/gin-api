@@ -85,13 +85,13 @@ func newRabbitMQ(queueName, exchange, key string, config *ConnectionConfig) (*Ra
 	}
 
 	if conn == nil {
-		return nil, fmt.Errorf("Failed to connect rabbitmq after %d attempts", config.MaxRetryAttempts)
+		return nil, fmt.Errorf("failed to connect rabbitmq after %d attempts", config.MaxRetryAttempts)
 	}
 
 	channel, err := conn.Channel()
 	if err != nil {
 		conn.Close()
-		return nil, fmt.Errorf("Failed to open a channel: %s", err)
+		return nil, fmt.Errorf("failed to open a channel: %s", err)
 	}
 
 	return &RabbitMQ{
