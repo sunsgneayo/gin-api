@@ -11,6 +11,7 @@
 - redis 缓存服务
 - rabbit 队列服务
 - http  客户端服务
+- rabbit 消息队列
 
 ### 快速开始
 
@@ -86,4 +87,29 @@ r.User(cors)
 #### 二进制打包
 ```shell
 go build -o main-linux main.go
+```
+
+#### 消息队列
+
+##### 队列投递
+```go
+    // 创建 RabbitMQ 实例时将使用新的连接配置
+	rabbitmq, _ := client.NewRabbitMQ("queueName")
+	// 其他操作...
+	rabbitmq.PublishSimple("Hello, RabbitMQ!")
+	// 最后别忘了关闭连接
+	defer rabbitmq.Destroy()
+```
+
+##### 队列消费
+```go
+	go func() {
+
+		rabbitmq, _ := client.NewRabbitMQ("queueName")
+
+		rabbitmq.ConsumeSimple(func(msg amqp.Delivery) {
+			log.Printf("接收到消费数据: %s", msg.Body)
+		})
+	}()
+
 ```
