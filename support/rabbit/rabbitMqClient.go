@@ -1,8 +1,10 @@
 package client
 
 import (
+	"dpj-admin-api/config"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/streadway/amqp"
@@ -20,7 +22,7 @@ type RabbitMQ struct {
 	Host      string
 	Username  string
 	Password  string
-	Port      int
+	Port      string
 }
 
 // ConnectionConfig 结构体用于动态设置连接配置
@@ -28,17 +30,17 @@ type ConnectionConfig struct {
 	Host             string
 	Username         string
 	Password         string
-	Port             int
+	Port             string
 	RetryInterval    time.Duration
 	MaxRetryAttempts int
 }
 
 // defaultConnectionConfig 默认连接配置
 var defaultConnectionConfig = &ConnectionConfig{
-	Host:             "127.0.0.1",
-	Username:         "sunsgne",
-	Password:         "123456",
-	Port:             5672,
+	Host:             config.Get("rabbit.host"),
+	Username:         config.Get("rabbit.username"),
+	Password:         config.Get("rabbit.password"),
+	Port:             config.Get("rabbit.port"),
 	RetryInterval:    DefaultRetryInterval,
 	MaxRetryAttempts: 3,
 }
@@ -67,7 +69,8 @@ func newRabbitMQ(queueName, exchange, key string, config *ConnectionConfig) (*Ra
 	var conn *amqp.Connection
 	var channel *amqp.Channel
 
-	mqURL := fmt.Sprintf("amqp://%s:%s@%s:%d/", config.Username, config.Password, config.Host, config.Port)
+	port, _ := strconv.Atoi(config.Port)
+	mqURL := fmt.Sprintf("amqp://%s:%s@%s:%d/", config.Username, config.Password, config.Host, port)
 
 	// 尝试建立连接，支持重试
 	for attempt := 1; attempt <= config.MaxRetryAttempts; attempt++ {
