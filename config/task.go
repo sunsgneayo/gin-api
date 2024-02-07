@@ -2,11 +2,10 @@ package config
 
 import (
 	"dpj-admin-api/task"
-	"fmt"
 	"github.com/robfig/cron/v3"
 )
 
-//newWithSeconds  返回一个支持至 秒 级别的 cron
+// newWithSeconds  返回一个支持至 秒 级别的 cron
 func newWithSeconds() *cron.Cron {
 	secondParser := cron.NewParser(cron.Second | cron.Minute |
 		cron.Hour | cron.Dom | cron.Month | cron.DowOptional | cron.Descriptor)
@@ -25,7 +24,7 @@ func InitTaskRun() {
 	i := 0
 	t.AddFunc(spec, func() {
 		i++
-		fmt.Println("cron running:", i)
+		//fmt.Println("cron running:", i)
 	})
 
 	// 任务开始

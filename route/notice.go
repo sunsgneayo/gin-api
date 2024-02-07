@@ -12,6 +12,6 @@ func NoticeRouter(r *gin.RouterGroup) {
 
 	router.GET("noticeList", controller.GetNoticeList)
 
-	router.POST("noticeInfo", controller.GetNotice)
+	router.GET("noticeInfo", controller.GetNotice)
 
 }

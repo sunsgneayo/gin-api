@@ -1,4 +1,4 @@
-package client
+package http
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-// HTTPClient is a simple HTTP client wrapper.
+// HTTPClient is a simple HTTP http wrapper.
 type HTTPClient struct {
 	client *http.Client
 }
