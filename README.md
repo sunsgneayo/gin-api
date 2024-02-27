@@ -32,15 +32,26 @@
 ```
 
 3. 配置`config.yaml`文件中的数据库或其他环境
+
 4. 运行项目,初次运行会拉取项目依赖，请等待拉取完成后运行
 ```shell
 go run ./main.go
 ```
-5. `build`为二进制运行,执行完成后，根目录会出现`dpj-admin-api`的二进制文件，
+5. 配置打包环境为Linux
 ```shell
-go build -o main-linux main.go
+set GOOS=linux
+or
+go env -w GOOS=linux
 ```
-6. 部署与守护进程运行，将二进制文件与config.yaml放到服务器后，使用**Supervisor**守护进程运行，
+
+6. `build`为二进制运行,执行完成后，根目录会出现`dpj-admin-api`的二进制文件，
+   
+```shell
+set GOOS=linux
+
+go build -o dpj-admin-api main.go
+```
+7. 部署与守护进程运行，将二进制文件与config.yaml放到服务器后，使用**Supervisor**守护进程运行，
 ```text
 # 新建一个应用并设置一个名称，这里设置为 
 [program:dpj-admin-api]
