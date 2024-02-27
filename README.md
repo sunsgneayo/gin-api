@@ -42,7 +42,7 @@ go build -o main-linux main.go
 ```
 6. 部署与守护进程运行，将二进制文件与config.yaml放到服务器后，使用**Supervisor**守护进程运行，
 ```text
-# 新建一个应用并设置一个名称，这里设置为 hyperf
+# 新建一个应用并设置一个名称，这里设置为 
 [program:dpj-admin-api]
 # 设置命令在指定的目录内执行
 directory=/www/wwwroot/dpj-admin.cqzln.top/
