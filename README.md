@@ -104,23 +104,22 @@ go build -o main-linux main.go
 
 ##### 队列投递 🗳
 ```go
-    // 创建 RabbitMQ 实例时将使用新的连接配置
-	rabbitmq, _ := client.NewRabbitMQ("queueName")
-	// 其他操作...
-	rabbitmq.PublishSimple("Hello, RabbitMQ!")
-	// 最后别忘了关闭连接
-	defer rabbitmq.Destroy()
+ // 创建 RabbitMQ 实例时将使用新的连接配置
+ rabbitmq, _ := client.NewRabbitMQ("queueName")
+ // 其他操作...
+ rabbitmq.PublishSimple("Hello, RabbitMQ!")
+ // 最后别忘了关闭连接
+ defer rabbitmq.Destroy()
 ```
 
 ##### 队列消费 🆓
 ```go
-	go func() {
+ go func() {
 
-		rabbitmq, _ := client.NewRabbitMQ("queueName")
+     rabbitmq, _ := client.NewRabbitMQ("queueName")
 
-		rabbitmq.ConsumeSimple(func(msg amqp.Delivery) {
-			log.Printf("接收到消费数据: %s", msg.Body)
-		})
-	}()
-
+     rabbitmq.ConsumeSimple(func(msg amqp.Delivery) {
+         log.Printf("接收到消费数据: %s", msg.Body)
+     })
+ }()
 ```
