@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="160px" src="http://cdn.nine1120.cn/logo-i.png" alt="sunsgne">
+  <img width="250px" src="http://cdn.nine1120.cn/logo-i.png" alt="sunsgne">
 </p>
 
 ## 🐬 gin-fast-api
