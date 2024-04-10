@@ -12,6 +12,7 @@
 - rabbit 队列服务
 - http  客户端服务
 - rabbit 消息队列
+- go-resty HTTP客户端
 
 ### 快速开始
 

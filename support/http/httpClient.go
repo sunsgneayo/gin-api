@@ -1,51 +1,26 @@
 package http
 
 import (
-	"bytes"
-	"io"
-	"net/http"
+	"github.com/go-resty/resty/v2"
 )
 
-// HTTPClient is a simple HTTP http wrapper.
-type HTTPClient struct {
-	client *http.Client
+// HttpClient  is a simple HTTP wrapper.
+type HttpClient struct {
+	client *resty.Client
 }
 
-// NewHTTPClient creates a new instance of HTTPClient.
-func NewHTTPClient() *HTTPClient {
-	return &HTTPClient{
-		client: &http.Client{},
+// NewHTTPClient  creates a new instance of HTTPClient.
+func NewHTTPClient() *HttpClient {
+	return &HttpClient{
+		client: resty.New(),
 	}
 }
 
 // Get sends an HTTP GET request and returns the response body and status code.
-func (c *HTTPClient) Get(url string) ([]byte, int, error) {
-	resp, err := c.client.Get(url)
+func (c *HttpClient) Get(url string) ([]byte, int, error) {
+	resp, err := c.client.R().SetHeader("cookie", "6526522").Get(url)
 	if err != nil {
 		return nil, 0, err
 	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	return body, resp.StatusCode, nil
-}
-
-// Post sends an HTTP POST request with the given payload and returns the response body and status code.
-func (c *HTTPClient) Post(url string, payload []byte) ([]byte, int, error) {
-	resp, err := c.client.Post(url, "application/json", bytes.NewBuffer(payload))
-	if err != nil {
-		return nil, 0, err
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	return body, resp.StatusCode, nil
+	return resp.Body(), resp.StatusCode(), nil
 }
