@@ -1,7 +1,7 @@
 package config
 
 import (
-	"dpj-admin-api/task"
+	"fmt"
 	"github.com/robfig/cron/v3"
 )
 
@@ -17,15 +17,14 @@ func InitTaskRun() {
 	t := newWithSeconds()
 	// corn 表达式
 	spec := "0 */1 * * * ?"
-
-	// 任务追加
-	t.AddFunc(spec, task.TestABCBCB)
-
-	i := 0
-	t.AddFunc(spec, func() {
-		i++
-		//fmt.Println("cron running:", i)
-	})
+	list := [5]int{1, 2, 3, 4, 5}
+	for _, attribute := range list {
+		// 如果不给attribute重新赋值引用那么Println永远是数组的最后一个值
+		attribute := attribute
+		t.AddFunc(spec, func() {
+			fmt.Println("cron running:", attribute)
+		})
+	}
 
 	// 任务开始
 	t.Start()
